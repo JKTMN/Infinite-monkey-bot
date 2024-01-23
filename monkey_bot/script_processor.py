@@ -2,17 +2,17 @@ import json
 import string
 import re
 
-def remove_line_numbers(input_file, output_file):
+def remove_numbers_and_punctuation(input_file, output_file):
     with open(input_file, 'r', encoding='utf-8') as input_file:
         lines = input_file.readlines()
 
-    # Use regular expression to remove line numbers
-    lines_without_numbers = [re.sub(r"^\s*\d+", "", line) for line in lines]
+    pattern = r"^\s*\d+|\b\d+\b|[{}]".format(re.escape(string.punctuation))
+    lines_without_numbers_and_punctuation = [re.sub(pattern, "", line) for line in lines]
 
     with open(output_file, 'w', encoding='utf-8') as output_file:
-        output_file.writelines(lines_without_numbers)
+        output_file.writelines(lines_without_numbers_and_punctuation)
 
-remove_line_numbers('macbeth_w_line_numbers.txt', 'macbeth_wo_line_numbers.txt')
+remove_numbers_and_punctuation('data/macbeth_w_line_numbers_and_punctuation.txt', 'data/macbeth_wo_line_numbers_and_punctuation..txt')
 
 def process_macbeth_script(macbeth_text, output_file="macbeth_dict.JSON"):
 
@@ -26,7 +26,7 @@ def process_macbeth_script(macbeth_text, output_file="macbeth_dict.JSON"):
         json.dump(result_dict, json_file, indent=2)
 
 
-with open('macbeth_wo_line_numbers.txt', 'r', encoding='utf-8') as file:
+with open('data/macbeth_wo_line_numbers_and_punctuation.txt', 'r', encoding='utf-8') as file:
     macbeth_text = file.read()
 
 process_macbeth_script(macbeth_text)
